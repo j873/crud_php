@@ -28,7 +28,7 @@ class Crud{
 
         $rows = $this->read();
         if($stmt->execute()){
-            print "<script>alert('Cadastro OK!')<\script>";
+            print "<script>alert('Cadastro OK!')</script>";
             print "<script> location.href='?action=read'; <\script>";
             return true;
         }else{
