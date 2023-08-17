@@ -6,8 +6,8 @@ $database = new Database();
 $db = $database->getConnection();
 $crud = new Crud($db);
 
-if(isset($_GET['action'])){
-    switch($_GET['action']){
+if (isset($_GET['action'])) {
+    switch ($_GET['action']) {
         case 'create':
             $crud->create($_POST);
             $rows = $crud->read();
@@ -15,33 +15,36 @@ if(isset($_GET['action'])){
         case 'read':
             $rows = $crud->read();
             break;
-        //case update//    
-        //case delete//
+            //case update//    
+            //case delete//
 
         default:
             $rows = $crud->read();
-            break;    
+            break;
     }
-}else{
-    $rows = $crud->read();    
+} else {
+    $rows = $crud->read();
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crud</title>
     <style>
-        form{
+        form {
             max-width: 500px;
             margin: 0 auto;
         }
-        label{
+
+        label {
             display: flex;
             margin-top: 10px;
         }
-        input[type=text]{
+
+        input[type=text] {
             width: 100%;
             padding: 12px 20px;
             margin: 8px 0;
@@ -50,55 +53,86 @@ if(isset($_GET['action'])){
             border-radius: 4px;
             box-sizing: border-box;
         }
-        input[type=submit]{
-            background-color:#4caf50;
+
+        input[type=submit] {
+            background-color: #4caf50;
             color: white;
             padding: 12px 20px;
-            border:none;
-            border-radius:4px;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
             float: right;
         }
-        input[type=submit]:hover{
+
+        input[type=submit]:hover {
             background-color: #45a049;
         }
-        table{
+
+        table {
             border-collapse: collapse;
-            width:100%;
-            font-family: Arial,sans-serif;
+            width: 100%;
+            font-family: Arial, sans-serif;
             font-size: 14px;
-            color:#333;
+            color: #333;
         }
-        th,td{
+
+        th,
+        td {
             text-align: left;
-            padding:8px;
+            padding: 8px;
             border: 1px solid #ddd;
         }
-        th{
+
+        th {
             background-color: #f2f2f2;
             font-weight: bold;
         }
-        a{
-            display:inline-block;
-            padding:4px 8px;
-            background-color:#007bff;
+
+        a {
+            display: inline-block;
+            padding: 4px 8px;
+            background-color: #007bff;
             color: #fff;
             text-decoration: none;
             border-radius: 4px;
         }
-        a:hover{
-            background-color:#0069d9;
-        }
-        a.delete{
-            background-color:#dc3545;
-        }
-        a.delete:hover{
-            background-color: #c82333;
+
+        a:hover {
+            background-color: #0069d9;
         }
 
+        a.delete {
+            background-color: #dc3545;
+        }
+
+        a.delete:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
+
 <body>
+
+
+     <?php
+
+
+        if(isset($_GET['action']) && $_GET['action'] == 'update' && isset($_GET['id'])){
+            $id = $_GET['id'];
+            $result =$crud->readOne($id);
+
+            if($result){
+                echo "Registro não encontrado";
+                exit();
+            }
+            $modelo = $result['modelo'];
+            $marca = $result['marca'];
+            $placa = $result['placa'];
+            $cor = $result['cor'];
+            $ano = $result['ano'];
+        
+
+     ?>
     <form action="?action=create" method="POST">
         <label for="">Modelo</label>
         <input type="text" name="modelo">
@@ -125,7 +159,31 @@ if(isset($_GET['action'])){
             <td>Placa</td>
             <td>Cor</td>
             <td>Ano</td>
+            <td>Ações</td>
         </tr>
+        <?php
+  if($rows->rowCount() == 0){
+    echo "<tr>";
+    echo "<td colspan='7'>Nenhum dado encontrado</td>";
+    echo "</tr>";
+  } else {
+    while($row = $rows->fetch(PDO::FETCH_ASSOC)){
+      echo "<tr>";
+      echo "<td>" . $row['id'] . "</td>";
+      echo "<td>" . $row['modelo'] . "</td>";
+      echo "<td>" . $row['marca'] . "</td>";
+      echo "<td>" . $row['placa'] . "</td>";
+      echo "<td>" . $row['cor'] . "</td>";
+      echo "<td>" . $row['ano'] . "</td>";
+      echo "<td>";
+      echo "<a href='?action=update&id=" . $row['id'] . "'>Atualizar</a>";
+      echo "<a href='?action=delete&id=" . $row['id'] . "' onclick='return confirm(\"Tem certeza que quer apagar esse registro?\")' class='delete'>Delete</a>";
+      echo "</td>";
+      echo "</tr>";
+    }
+  }
+?>
     </table>
 </body>
+
 </html>
