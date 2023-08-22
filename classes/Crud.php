@@ -30,15 +30,9 @@ class Crud
         $stmt->bindParam(5, $ano);
 
         $rows = $this->read();
-<<<<<<< HEAD
         if ($stmt->execute()) {
             print "<script>alert('Cadastro OK!');</script>";
             print "<script>location.href='?action=read';</script>";
-=======
-        if($stmt->execute()){
-            print "<script>alert('Cadastro OK!')</script>";
-            print "<script> location.href='?action=read'; <\script>";
->>>>>>> f32bdc9c7d81d68c65abad72c66ade8f6b2fa201
             return true;
         } else {
             return false;
@@ -84,19 +78,23 @@ class Crud
         
         
     }
-<<<<<<< HEAD
     public function readOne($id){
-        $query = "SELECT * FROM ". $this->table_name . " WHERE id = ?";
-        $stmt =$this->conn->prepare($query);
-        $stmt->bindParam(1, $id);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
+            $query = "SELECT * FROM ". $this->table_name . " WHERE id = ?";
+            $stmt =$this->conn->prepare($query);
+            $stmt->bindParam(1, $id);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+        public function delete($id){
+            $query = "DELETE FROM ". $this->table_name . " WHERE id = ?";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(1,$id);
+            if($stmt->execute()){
+                return true;
+            }else{
+                return false;
+            }
+        }
 }
 ?>
-=======
-
-
-
-?>
->>>>>>> f32bdc9c7d81d68c65abad72c66ade8f6b2fa201
